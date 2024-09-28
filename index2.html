@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início do Jogo</title>
+    <!-- Importando a fonte Roboto Slab do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto Slab', serif;
+            background: url(OIP\ \(6\).jpeg) no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .box {
+            width: 500px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffeb3b, #ffc107);
+            border: 2px solid #ff9800;
+            border-radius: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .box .image-container {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .box .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 15px;
+        }
+
+        .form-container {
+            width: calc(100% - 180px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-container input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ffcc80;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .form-container button {
+            width: 50%;
+            padding: 10px;
+            background-color: #ff9800;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .form-container button:hover {
+            background-color: #f57c00;
+        }
+
+        .form-container button:active {
+            background-color: #ef6c00;
+        }
+
+        /* Nova box de opções de imagem */
+        .image-options {
+            width: 300px;
+            padding: 10px;
+            background: linear-gradient(135deg, #ffcc80, #ffeb3b);
+            border: 2px solid #ff9800;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: -350px;
+            top: -40px;
+            z-index: 4;
+            backdrop-filter: blur(10px);
+            margin-left: 15px;
+            padding: 10px;
+        }
+
+        .image-options h2 {
+            color: #000000;
+            margin-bottom: 10px;
+        }
+
+        .image-options img {
+            width: 120px;
+            height: 120px;
+            margin: 5px;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.3s;
+        }
+
+        .image-options img:hover {
+            border: 2px solid #ffe57f;
+        }
+
+        .close-btn {
+            margin: 5px 0;
+            padding: 6px 10px;
+            background-color: #ffe57f;
+            color: #ff9800;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background-color: #ffd740;
+            color: #fff;
+        }
+
+        /* Segunda box com botões marcáveis */
+        .checkbox-box {
+            width: 500px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffeb3b, #ffc107);
+            border: 3px solid #ff9800;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .checkbox-box label {
+            color: #000000;
+            font-size: 14px;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-box input[type="checkbox"] {
+            margin-right: 5px;
+            accent-color: #ff9800;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-box input[type="checkbox"]:checked {
+            background-color: #ffcc80;
+        }
+
+        /* Estilo para a palavra "Tema atual" */
+        .theme-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Elemento de áudio para a música de fundo -->
+    <audio id="backgroundMusic" src="nightfall-future-bass-music-228100.mp3" loop></audio>
+
+    <!-- Primeira Box com o campo de nome e imagem -->
+    <div class="box">
+        <div class="image-container" onclick="showImageOptions()">
+            <img src="Personagem 3.jpeg" id="mainImage" alt="Imagem do jogo">
+        </div>
+
+        <div class="form-container">
+            <h1>Iniciar Jogo</h1>
+            <input type="text" placeholder="Digite seu nome" id="playerName">
+            <button onclick="startGame()">Começar Jogo</button>
+        </div>
+
+        <!-- Nova Box de seleção de imagem -->
+        <div class="image-options" id="imageOptionsBox">
+            <h2>Mude o tema das questoes</h2>
+            <img src="personagem 2.jpeg" onclick="changeImage('image1.jpg', 'index.html')" alt="Opção 1">
+            <img src="OIP (5).jpeg" onclick="changeImage('image2.jpg', 'index copy.html')" alt="Opção 2">
+            <img src="Personagem 3.jpeg" onclick="changeImage('image3.jpg', 'index2.html')" alt="Opção 3">
+            <button class="close-btn" onclick="closeImageOptions()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Segunda Box com botões marcáveis -->
+    <div class="checkbox-box">
+        <label>
+            <input type="checkbox" id="option1" onchange="toggleMusic()"> Música
+        </label>
+        <label>
+            <input type="checkbox" id="option2"> Max pro luiz
+        </label>
+    </div>
+
+    <!-- Exibe o tema atual -->
+    <div class="theme-status" id="themeStatus">Tema atual: Filmes</div>
+
+    <script>
+        function showImageOptions() {
+            document.getElementById('imageOptionsBox').style.display = 'flex';
+        }
+
+        function closeImageOptions() {
+            document.getElementById('imageOptionsBox').style.display = 'none';
+        }
+
+        function changeImage(newImage, newPage) {
+            document.getElementById('mainImage').src = newImage;
+            closeImageOptions();
+            window.location.href = newPage; // Redireciona para a nova página
+        }
+
+        function startGame() {
+            var playerName = document.getElementById('playerName').value;
+            if (playerName.trim() !== '') {
+                alert('Bem-vindo ao jogo, ' + playerName + '!');
+                // Redireciona para a página do jogo, por exemplo, "jogo.html"
+                window.location.href = 'jogo3.html?player=' + encodeURIComponent(playerName); // Passa o nome do jogador na URL
+            } else {
+                alert('Por favor, digite seu nome antes de começar.');
+            }
+        }
+
+        function toggleMusic() {
+            var music = document.getElementById('backgroundMusic');
+            var checkbox = document.getElementById('option1');
+            if (checkbox.checked) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        // Inicia a música de fundo ao carregar a página
+        window.onload = function() {
+            var music = document.getElementById('backgroundMusic');
+            music.volume = 0.5; // Define o volume da música (de 0 a 1)
+        };
+    </script>
+</body>
+</html>

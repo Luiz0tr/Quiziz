@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início do Jogo</title>
+    <!-- Importando a fonte Roboto Slab do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto Slab', serif;
+            background: url(abstract-modern-line-red-simple-background_402533-1270.avif) no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .box {
+            width: 500px; /* Diminuiu a largura */
+            padding: 15px; /* Diminuiu o padding */
+            background: linear-gradient(135deg, #b22222, #ff6347);
+            border: 2px solid #8b0000;
+            border-radius: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+            margin: 10px 0; /* Diminuiu a margem */
+            position: relative;
+        }
+
+        .box .image-container {
+            width: 150px; /* Diminuiu a largura da imagem */
+            height: 150px; /* Diminuiu a altura da imagem */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px; /* Diminuiu a margem à direita */
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .box .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 15px;
+        }
+
+        .form-container {
+            width: calc(100% - 180px); /* Ajusta a largura conforme a nova largura da imagem */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-container input[type="text"] {
+            width: 100%;
+            padding: 10px; /* Diminuiu o padding */
+            margin-bottom: 15px; /* Diminuiu a margem inferior */
+            border: 1px solid #d3a0ff;
+            border-radius: 10px;
+            font-size: 16px; /* Diminuiu o tamanho da fonte */
+        }
+
+        .form-container button {
+            width: 50%; /* Diminuiu a largura do botão */
+            padding: 10px; /* Diminuiu o padding */
+            background-color: #ff4500;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px; /* Diminuiu o tamanho da fonte */
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .form-container button:hover {
+            background-color: #e63900;
+        }
+
+        .form-container button:active {
+            background-color: #d32f2f;
+        }
+
+        /* Nova box de opções de imagem */
+        .image-options {
+            width: 300px; /* Diminuiu a largura da box */
+            padding: 10px;
+            background: linear-gradient(135deg, #b22222, #ff6347);
+            border: 2px solid #8b0000;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: -350px; /* Mover para o lado esquerdo */
+            top: -40px; /* Ajusta a posição para cima */
+            z-index: 4;
+            backdrop-filter: blur(10px);
+            margin-left: 15px; /* Diminuiu o espaço à esquerda */
+            padding: 10px; /* Diminuiu o padding interno */
+        }
+
+        .image-options h2 {
+            color: #ffffff;
+            margin-bottom: 10px; /* Diminuiu a margem inferior */
+        }
+
+        .image-options img {
+            width: 120px; /* Diminuiu o tamanho das imagens */
+            height: 120px; /* Diminuiu o tamanho das imagens */
+            margin: 5px; /* Diminuiu a margem */
+            border-radius: 15px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.3s;
+        }
+
+        .image-options img:hover {
+            border: 2px solid #ff9999;
+        }
+
+        .close-btn {
+            margin: 5px 0; /* Diminuiu a margem */
+            padding: 6px 10px; /* Diminuiu o padding */
+            background-color: #ff9999;
+            color: #8b0000;
+            border: 2px solid #ff7f7f;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px; /* Diminuiu o tamanho da fonte */
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background-color: #ff7f7f;
+            color: #fff;
+        }
+
+        /* Segunda box com botões marcáveis */
+        .checkbox-box {
+            width: 500px; /* Diminuiu a largura da box */
+            padding: 20px; /* Diminuiu o padding */
+            background: linear-gradient(135deg, #b22222, #ff6347);
+            border: 3px solid #8b0000;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .checkbox-box label {
+            color: #ffffff;
+            font-size: 14px; /* Diminuiu o tamanho da fonte */
+            margin: 0 5px; /* Diminuiu a margem */
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-box input[type="checkbox"] {
+            margin-right: 5px;
+            accent-color: #ff6347; /* Cor do checkbox */
+            width: 18px; /* Diminuiu o tamanho do checkbox */
+            height: 18px; /* Diminuiu o tamanho do checkbox */
+        }
+
+        .checkbox-box input[type="checkbox"]:checked {
+            background-color: #ff9999;
+        }
+
+        /* Estilo para a palavra "Tema atual" */
+        .theme-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            padding: 8px 12px; /* Diminuiu o padding */
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            font-size: 14px; /* Diminuiu o tamanho da fonte */
+        }
+    </style>
+</head>
+<body>
+    <!-- Elemento de áudio para música de fundo -->
+    <audio id="backgroundMusic" src="nightfall-future-bass-music-228100.mp3" loop></audio>
+
+    <!-- Primeira Box com o campo de nome e imagem -->
+    <div class="box">
+        <div class="image-container" onclick="showImageOptions()">
+            <img src="OIP (5).jpeg" id="mainImage" alt="Imagem do jogo">
+        </div>
+
+        <div class="form-container">
+            <h1>Iniciar Jogo</h1>
+            <input type="text" placeholder="Digite seu nome" id="playerName">
+            <button onclick="startGame()">Começar Jogo</button>
+        </div>
+
+        <!-- Nova Box de seleção de imagem -->
+        <div class="image-options" id="imageOptionsBox">
+            <h2>Mude o tema das questões</h2>
+            <img src="personagem 2.jpeg" onclick="changeImage('image1.jpg', 'index.html')" alt="Opção 1">
+            <img src="OIP (5).jpeg" onclick="changeImage('image2.jpg', 'index copy.html')" alt="Opção 2">
+            <img src="Personagem 3.jpeg" onclick="changeImage('image3.jpg', 'index2.html')" alt="Opção 3">
+            <button class="close-btn" onclick="closeImageOptions()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Segunda Box com opções de música -->
+    <div class="checkbox-box">
+        <label>
+            <input type="checkbox" id="musicCheckbox" onclick="toggleMusic()" checked> Ativar Música
+        </label>
+        <label>
+            <input type="checkbox" id="themeCheckbox" onclick="toggleTheme()"> Tema Escuro
+        </label>
+    </div>
+
+    <!-- Indicador de tema atual -->
+    <div class="theme-status" id="themeStatus">Tema atual: Jogos</div>
+
+    <script>
+        function startGame() {
+            var playerName = document.getElementById('playerName').value;
+            if (playerName) {
+                window.location.href = 'jogo2.html?name=' + encodeURIComponent(playerName);
+            } else {
+                alert('Por favor, digite seu nome!');
+            }
+        }
+
+        function showImageOptions() {
+            document.getElementById('imageOptionsBox').style.display = 'flex';
+        }
+
+        function closeImageOptions() {
+            document.getElementById('imageOptionsBox').style.display = 'none';
+        }
+
+        function changeImage(imageSrc, page) {
+            document.getElementById('mainImage').src = imageSrc;
+            window.location.href = page;
+        }
+
+        function toggleMusic() {
+            var music = document.getElementById('backgroundMusic');
+            var checkbox = document.getElementById('musicCheckbox');
+            if (checkbox.checked) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        function toggleTheme() {
+            var body = document.body;
+            var themeStatus = document.getElementById('themeStatus');
+            if (body.style.backgroundColor === 'black') {
+                body.style.backgroundColor = 'white';
+                body.style.color = 'black';
+                themeStatus.innerText = 'Tema atual: Claro';
+                themeStatus.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                themeStatus.style.color = 'white';
+            } else {
+                body.style.backgroundColor = 'black';
+                body.style.color = 'white';
+                themeStatus.innerText = 'Tema atual: Escuro';
+                themeStatus.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+                themeStatus.style.color = 'black';
+            }
+        }
+    </script>
+</body>
+</html>

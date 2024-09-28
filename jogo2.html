@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contagem Regressiva e Pergunta</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background-image: url(vector-red-square-grid-mosaic-background-creative-design-templates.jpg);
+            background-size: cover;
+            color: #f0f0f0;
+            position: relative;
+        }
+
+        #countdown {
+            position: absolute;
+            top: 20%;
+            font-size: 100px;
+        }
+
+        #mainContent {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 90%;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            position: relative;
+        }
+
+        .question-box {
+            width: 80%;
+            padding: 20px;
+            margin-bottom: 50px;
+            background: rgba(150, 50, 50, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center;
+            font-size: 48px;
+            border: 3px solid #8b0000;
+        }
+
+        .options-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .option {
+            width: 470px;
+            height: 80px;
+            padding: 15px;
+            background: rgba(150, 50, 50, 0.9);;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.6s, background 0.6s;
+            text-align: center;
+            margin: 5px;
+            font-size: 24px;
+            perspective: 1000px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .option:hover {
+            background: rgba(255, 100, 100, 1);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
+
+        .back {
+            transform: rotateY(180deg);
+            background: rgba(255, 255, 255, 0.8);
+            color: black;
+        }
+
+        .option.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .option.correct {
+            background-color: green !important;
+        }
+
+        .option.incorrect {
+            background-color: red !important;
+        }
+
+        #resultBox {
+            display: none;
+            width: 80%;
+            padding: 30px;
+            margin-top: 3px;
+            background: rgba(150, 50, 50, 0.9);
+            border-radius: 10px;
+            color: white;
+            border: 3px solid #8b0000;
+            font-size: 40px;
+            text-align: center;
+        }
+
+        #showResultsButton {
+            display: none;
+            padding: 10px 20px;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: rgba(250, 250, 199, 0.8);
+            color: black;
+            margin-top: 20px;
+        }
+
+        #finalResultBox {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(150, 50, 50, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 48px;
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: rgba(250, 250, 199, 0.8);
+            color: black;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        #questionsAnswered {
+            display: none;
+            width: 80%;
+            margin-top: 20px;
+            background: rgba(150, 50, 50, 0.8);
+            border-radius: 10px;
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="countdown">3</div>
+    <div id="mainContent">
+        <div class="question-box" id="questionBox">
+            <h1>Qual é a capital da França?</h1>
+        </div>
+        <div class="options-container" id="optionsContainer"></div>
+        <div id="resultBox"></div>
+        <div id="questionsAnswered"></div>
+        <button id="showResultsButton" onclick="showResults()">Mostrar Resultados Provisórios</button>
+    </div>
+    <div id="finalResultBox">
+        <div id="finalResultMessage"></div>
+        <button class="action-button" onclick="restartGame()">Jogar de Novo</button>
+        <button class="action-button" onclick="changeTheme()">Mudar Tema</button>
+    </div>
+
+    <script>
+        let countdownValue = 3;
+        const countdownElement = document.getElementById('countdown');
+        const mainContent = document.getElementById('mainContent');
+        const questionBox = document.getElementById('questionBox');
+        const resultBox = document.getElementById('resultBox');
+        const showResultsButton = document.getElementById('showResultsButton');
+        const finalResultBox = document.getElementById('finalResultBox');
+        const finalResultMessage = document.getElementById('finalResultMessage');
+        const questionsAnswered = document.getElementById('questionsAnswered');
+
+        const questions = [
+            { question: "Qual desse jogos NAO foi criado pela Riot Games??", correctAnswer: 0, options: ["Hallo", "League Of Legends", "Valorant", "TFT"] },
+            { question: "Quem ganhou o jogo do ano em 2023?", correctAnswer: 2, options: ["Read Dead Redenption", "GTA 6", "Baldur's Gate III", "Left For dead III"] },
+            { question: "Qual o jogo mais vendido da historia?", correctAnswer: 1, options: ["Mario", "Minecraft", "FORTNITE", "Zelda"] }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answeredQuestions = [];
+
+        const countdownInterval = setInterval(() => {
+            countdownElement.textContent = countdownValue;
+            countdownValue--;
+
+            if (countdownValue < 0) {
+                clearInterval(countdownInterval);
+                countdownElement.style.display = 'none';
+                mainContent.style.display = 'flex';
+                showQuestion();
+            }
+        }, 1000);
+
+        function showQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const currentQuestion = questions[currentQuestionIndex];
+                questionBox.innerHTML = `<h1>${currentQuestion.question}</h1>`;
+                const optionsContainer = document.getElementById('optionsContainer');
+                optionsContainer.innerHTML = '';
+
+                const shuffledOptions = shuffleArray([...currentQuestion.options]);
+                shuffledOptions.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.classList.add('option');
+
+                    const isCorrect = currentQuestion.options[currentQuestion.correctAnswer] === option;
+                    optionDiv.innerHTML = `
+                        <div class="front">${option}</div>
+                        <div class="back">${isCorrect ? 'Correta!' : 'Incorreta!'}</div>
+                    `;
+                    optionDiv.onclick = () => selectOption(optionDiv, isCorrect);
+                    optionsContainer.appendChild(optionDiv);
+                });
+
+                questionsAnswered.innerHTML = `Questões respondidas: ${answeredQuestions.length} de ${questions.length}`;
+                questionsAnswered.style.display = 'block';
+            } else {
+                showFinalResults();
+            }
+        }
+
+        function selectOption(option, isCorrect) {
+            option.classList.add('flipped');
+            if (isCorrect) {
+                score++;
+                option.classList.add('correct');
+            } else {
+                option.classList.add('incorrect');
+            }
+            answeredQuestions.push(currentQuestionIndex);
+            currentQuestionIndex++;
+            setTimeout(() => showQuestion(), 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function showFinalResults() {
+            mainContent.style.display = 'none';
+            finalResultBox.style.display = 'block';
+            finalResultMessage.textContent = `Você acertou ${score} de ${questions.length} perguntas.`;
+        }
+
+        function restartGame() {
+            score = 0;
+            currentQuestionIndex = 0;
+            answeredQuestions = [];
+            finalResultBox.style.display = 'none';
+            countdownValue = 3;
+            countdownElement.style.display = 'block';
+            const countdownInterval = setInterval(() => {
+                countdownElement.textContent = countdownValue;
+                countdownValue--;
+
+                if (countdownValue < 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.style.display = 'none';
+                    mainContent.style.display = 'flex';
+                    showQuestion();
+                }
+            }, 1000);
+        }
+        function changeTheme() {
+    window.location.href = "index copy.html"; // Redireciona para a nova página index.html
+}
+    </script>
+</body>
+</html>
